@@ -171,22 +171,23 @@ You should see two main data variables:
 Let's examine the dimensions:
 
 ```{julia}
-# What are the time points?
+# What are the time points? 
 ds["time"][:]
 ```
 
 ```{julia}
-# How many ensemble members does BRICK have?
+# How many ensemble members does BRICK have? 
 ds["ensemble"][:]
 ```
 
 ::: {.callout-tip appearance="simple" icon=false title="Your Response"}
 *Look at the output above.*
 
-*What years does the data cover?*
+*What years does the data cover?* 2000 to 2100
 *How many ensemble members are in the BRICK projections?*
 
-*Replace this text with your answer.*
+2000 to 2100
+ 1000
 :::
 
 
@@ -213,7 +214,7 @@ dims(noaa_slr)
 Now let's extract the "intermediate" scenario (index 3):
 
 ```{julia}
-# Your code here
+intermediate = noaa_slr[noaa_scenario =3]
 ```
 
 
@@ -231,7 +232,7 @@ This gives us a 2D array (time × ensemble).
 Let's compute the median across ensemble members for each year:
 
 ```{julia}
-# Your code here
+median(rcp85_slr; dims = :ensemble)
 ```
 
 ::: {.callout-tip appearance="simple" icon=false title="Exercise"}
@@ -243,8 +244,11 @@ Let's compute the median across ensemble members for each year:
 :::
 
 ```{julia}
-# Your code here
-# Your code here
+using Statistics
+
+rcp85_p95 = mapslices(x -> quantile(x, 0.95), rcp85_slr; dims = :ensemble)
+rcp85_p95 = dropdims(rcp85_p95; dims = :ensemble)
+
 ```
 
 
@@ -290,7 +294,7 @@ end
 ::: {.callout-tip appearance="simple" icon=false title="Your Response"}
 *What do you notice about the relationship between the NOAA Intermediate scenario and the BRICK RCP 8.5 projections?*
 
-*Replace this text with your observations.*
+The NOAA Intermediate scenario and the BRICK RCP 8.5 projections are in agreement until around 2035, and then they diverge with the NOAA projections being higher than the median BRICK proection. 
 :::
 
 
@@ -345,7 +349,7 @@ end
 *If you were advising a city planner, how would you explain what these scenarios mean?
 Why isn't there a probability attached to each scenario?*
 
-*Replace this text with your answer.*
+There are many factors that will determine sea level rise that we do not currently know or understand. For example, how much the sea rises depends on how much we continue to emit. There isn't a probability attached to each scenario because this is not a probabilistic assessment, but a "what if" analysis. 
 :::
 
 
@@ -465,7 +469,7 @@ end
 *How does the spread (uncertainty) change as we project further into the future?
 Why does this happen?*
 
-*Replace this text with your answer.*
+There is less density across the 2100 distribution because these projections are more uncertain and contain higher variability. 
 :::
 
 
@@ -515,11 +519,14 @@ end
 *Looking at @fig-comparison, answer these questions:*
 
 1. *Where does the NOAA "High" scenario fall relative to the BRICK 90% range?*
+The NOAA High scenario is much higher than the BRICK 90% range. 
 2. *What does this tell us about the relationship between these two approaches?*
+When we run an ensemble, we can estimate the variability in our results. The NOAA result may be an anomaly. 
 3. *The BRICK ensemble spread represents uncertainty in model parameters. What kinds of uncertainties might this capture?*
+We have uncertainties in the feedbacks between different climate factors including albedo. 
 4. *The choice between NOAA scenarios represents different possible futures. Why can't we assign probabilities to these scenarios?*
+These are not ensemble runs, but single estimates based on different parameters. We cannot assign probabilities because we have not assessed the sensitity and uncertainty in the paramaters. 
 
-*Replace this text with your answers.*
 :::
 
 
@@ -533,9 +540,10 @@ Think back to this week's lectures on climate scenarios and projections.
 *In the context of sea-level rise projections:*
 
 - *What is the difference between a scenario (like NOAA's "High" scenario) and a projection (like BRICK's probabilistic ensemble)?*
+The scenario is a single example of what might happen in a given set of circumstances. The projection represent the range of probabilistic outcomes of a given scenario. 
 - *Why do climate scientists use scenarios instead of making single predictions about the future?*
+Climate scientists like projections better so that we can quantify the uncertainty of our estimates. This let's us say with confidence that the range of sea level rise is between two values.
 
-*Replace this text with your answer.*
 :::
 
 
@@ -550,7 +558,8 @@ Think back to this week's lectures on climate scenarios and projections.
 *How would you use these projections differently for each decision?
 Which approach (NOAA scenarios or BRICK probabilistic) would you prefer for each, and why?*
 
-*Replace this text with your answer.*
+1. To design the seawall, I would use the worst case scenario from NOAA. If the design must last until 20250, then we need to design it for the worst possible scenario. 
+2. For the zoning restrictions, I would use the projections. These restrictions are set to last for a very long time. I want to know more about the uncertainty so that I can balance safety with economic interests.
 :::
 
 
@@ -561,7 +570,7 @@ Which approach (NOAA scenarios or BRICK probabilistic) would you prefer for each
 
 *How would you respond? Use concepts from both the lecture and this lab.*
 
-*Replace this text with your answer.*
+While we do not know the exact number, we have good estimates on the range of the rise and we know that it will rise at least some. Therefore we can use the projections to decide our risk tolerance and balance it with the money spent. 
 :::
 
 
